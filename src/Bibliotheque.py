@@ -1,3 +1,13 @@
+import csv 
+from datetime import datetime
+
+from exception import (
+    LivreInexistantError,
+    LivreIndisponibleError,
+    MembreInexistantError,
+    QuotaEmpruntDepasseError
+) 
+
 class Livre:
     def __init__(self,ISBN,titre,auteur,année,genre,statut):
         self.ISBN=ISBN
@@ -7,30 +17,19 @@ class Livre:
         self.genre=genre
         self.statut=statut
 
-    def to_dict(self):
-        return {
-            "ISBN": self.ISBN,
-            "titre": self.titre,
-            "auteur": self.auteur,
-            "année": self.année,
-            "genre": self.genre,
-            "statut": self.statut,      
-        }
+    def __str__(self):
+      return f"Live(ISBN:{self.ISBN}, titre:{self.titre}, auteur: {self.auteur}, année:{self.année}, genre:{self.genre}, statut: {self.statut})"
     
 class Membre:
     def __init__(self,ID,nom):
         self.ID=ID
         self.nom=nom
         self.livres_empruntes=[]
-
-    def to_dict(self):
-        return {
-            "ID": self.ID,
-            "nom": self.nom,
-            "livres_empruntes": [livre.ISBN for livre in self.livres_empruntes]
-        }
-
-
+   
+    def __str__(self):
+        empruntes = ", ".join([livre.titre for livre in self.livres_empruntes]) or "Aucun"
+        return f"Membre(ID:{self.ID}, nom:{self.nom}, livres empruntes:{empruntes})"
+   
 class Bibliotheque:
 
     def __init__(self):
@@ -46,7 +45,7 @@ class Bibliotheque:
     def supprimer_livre(self,livre:Livre):
         self.livres.pop(livre.ISBN)
     
-    def enregistrement_membres(self,membre:Membre):
+    def enregistrer_membres(self,membre:Membre):
         self.membres[membre.ID]=membre
     
 
@@ -64,8 +63,9 @@ class Bibliotheque:
         if livre.statut=="emprunté":
             raise LivreIndisponibleError()
         
-        livre.statut="disponible"
+        livre.statut="emprunté"
         membre.livres_empruntes.append(livre)
+        self.enregistrer_historique(livre,membre,"emprunt")
 
     def gestion_retours(self,livre:Livre,membre:Membre):
         if livre.ISBN not in self.livres:
@@ -77,19 +77,76 @@ class Bibliotheque:
         if livre in membre.livres_empruntes:
             livre.statut="disponible"
             membre.livres_empruntes.remove(livre)
+            self.enregistrer_historique(livre,membre,"retour")
            
 
-    def souvegarde_données(sself):
-        with open("livres.txt","w",encoding="utf-8") as f:
+    def souvegarde_donnees(self):
+        with open("data/livres.txt","w",encoding="utf-8") as f:
            for livre in self.livres.values():
-            ligne=f"{livre.ISBN}; {livre.titre}; {livre.auteur};{livre.genre}; {livre.année}; {livre.statut}\n"
+            ligne = f"{livre.ISBN};{livre.titre};{livre.auteur};{livre.année};{livre.genre};{livre.statut}\n"
             f.write(ligne)
 
-        with open("membres.txt","w",encoding="utf-8") as f:
+        with open("data/membres.txt","w",encoding="utf-8") as f:
             for membre in self.membres.values():
-                emprunte="/".join([livre.ISBN for livre in membre.livres_emprunte])
+                emprunte="/".join([livre.ISBN for livre in membre.livres_empruntes])
                 ligne=f"{membre.ID}; {membre.nom}; {emprunte}\n"
                 f.write(ligne)
 
-    def chargement_données(self,):
+    def chargement_donnees(self):
+        with open("data/livres.txt","r",encoding="utf-8") as f:
+            for ligne in f:
+                isbn,titre,auteur,annee,genre,statut=ligne.strip().split(";")
+                livre=Livre(isbn,titre,auteur,annee,genre,statut)
+                self.livres[livre.ISBN]=livre
+
+        with open("data/membres.txt","r",encoding="utf-8") as f:
+            for ligne in f:
+                id,nom,liste_isbn_livre=ligne.strip().split(";")
+                membre=Membre(id.strip(),nom.strip())   
+                if liste_isbn_livre.strip():
+                 for isbn in liste_isbn_livre.split("/"):
+                    isbn=isbn.strip()
+                    if isbn in self.livres:
+                        livre=self.livres[isbn]
+                        membre.livres_empruntes.append(livre)
+                    else:
+                        print("livre non trouvé")
+
+                self.membres[membre.ID]=membre
+
+              
+
+
+
+    def afficher_donnees(self):
+        print("----Livres----:")
+        if not self.livres:
+            print("auncun livre n'est dans la bibliotheque")
+
+        else:
+            for livre in self.livres.values():
+                print(livre)
+
+        print("----Membres:----")
+        if not self.membres:
+            print("auncun membre n'est dans la bibliotheque")
+
+        else:
+            for membre in self.membres.values():
+                emprunte="/".join([livre.ISBN for livre in membre.livres_empruntes])
+                print (f" Membre: {membre.ID}; {membre.nom}; {emprunte};")
+
+
+            
+    def enregistrer_historique(self,livre,membre,action):
+        date_heure = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        with open("data/historique.csv", "a", newline="", encoding="utf-8") as f:
+               writer = csv.writer(f, delimiter=";")
+               writer.writerow([date_heure, livre.ISBN, membre.ID, action])
+
+
+
+    
+
+
     

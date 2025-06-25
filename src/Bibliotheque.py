@@ -1,3 +1,12 @@
+import os
+
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))  # Dossier racine du projet
+DATA_DIR = os.path.join(BASE_DIR, "data")
+
+LIVRES_PATH = os.path.join(DATA_DIR, "livres.txt")
+MEMBRES_PATH = os.path.join(DATA_DIR, "membres.txt")
+HISTORIQUE_PATH = os.path.join(DATA_DIR, "historique.csv")
+
 import csv 
 from datetime import datetime
 
@@ -81,25 +90,25 @@ class Bibliotheque:
            
 
     def souvegarde_donnees(self):
-        with open("data/livres.txt","w",encoding="utf-8") as f:
+        with open(LIVRES_PATH,"w",encoding="utf-8") as f:
            for livre in self.livres.values():
             ligne = f"{livre.ISBN};{livre.titre};{livre.auteur};{livre.année};{livre.genre};{livre.statut}\n"
             f.write(ligne)
 
-        with open("data/membres.txt","w",encoding="utf-8") as f:
+        with open(MEMBRES_PATH,"w",encoding="utf-8") as f:
             for membre in self.membres.values():
                 emprunte="/".join([livre.ISBN for livre in membre.livres_empruntes])
                 ligne=f"{membre.ID}; {membre.nom}; {emprunte}\n"
                 f.write(ligne)
 
     def chargement_donnees(self):
-        with open("data/livres.txt","r",encoding="utf-8") as f:
+        with open(LIVRES_PATH,"r",encoding="utf-8") as f:
             for ligne in f:
                 isbn,titre,auteur,annee,genre,statut=ligne.strip().split(";")
                 livre=Livre(isbn,titre,auteur,annee,genre,statut)
                 self.livres[livre.ISBN]=livre
 
-        with open("data/membres.txt","r",encoding="utf-8") as f:
+        with open(MEMBRES_PATH,"r",encoding="utf-8") as f:
             for ligne in f:
                 id,nom,liste_isbn_livre=ligne.strip().split(";")
                 membre=Membre(id.strip(),nom.strip())   
@@ -133,14 +142,14 @@ class Bibliotheque:
 
         else:
             for membre in self.membres.values():
-                emprunte="/".join([livre.ISBN for livre in membre.livres_empruntes])
+                emprunte = "/".join([str(livre.ISBN) for livre in membre.livres_empruntes])
                 print (f" Membre: {membre.ID}; {membre.nom}; {emprunte};")
 
 
             
     def enregistrer_historique(self,livre,membre,action):
         date_heure = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        with open("data/historique.csv", "a", newline="", encoding="utf-8") as f:
+        with open(HISTORIQUE_PATH, "a", newline="", encoding="utf-8") as f:
                writer = csv.writer(f, delimiter=";")
                writer.writerow([date_heure, livre.ISBN, membre.ID, action])
 

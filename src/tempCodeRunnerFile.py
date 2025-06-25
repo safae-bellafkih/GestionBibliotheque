@@ -25,32 +25,22 @@ def main():
        match choix:
            case "1":
                print("---Ajout d'un livre---")
-               while True:
-                 ISBN=int(input("Entrer l isbn du livre:"))
-                 if ISBN in Biblio.livres:
-                    print(f"Erreur: un livre avec ce ISBN existe déja.Veuillez saisir un autre ISBN.")
-                 else:
-                    titre=input("Entrer le titre du livre:")
-                    auteur=input("Entrer le nom de l'auteur:")
-                    année=int(input("Entrer l'année de publication:"))
-                    genre=input("De quel genre ?:")
-                    livre=Livre(ISBN,titre,auteur,année,genre,"disponible")
-                    Biblio.ajouter_livre(livre)
-                    print("Livre bien ajouté!")
-                    break
+               ISBN=int(input("Entrer l isbn du livre:"))
+               titre=input("Entrer le titre du livre:")
+               auteur=input("Entrer le nom de l'auteur:")
+               année=int(input("Entrer l'année de publication:"))
+               genre=input("De quel genre ?:")
+               livre=Livre(ISBN,titre,auteur,année,genre,"disponible")
+               Biblio.ajouter_livre(livre)
+               print("Livre bien ajouté!")
 
            case "2":
                 print("---Ajout d'un membre---")
-                while True:
-                  ID=int(input("Entrer l id du membre :"))
-                  if ID in Biblio.membres:
-                      print(f"Erreur: un membre avec ce ID existe déja.Veuillez saisir un autre ID.")
-                  else:
-                     nom=input("Entrer le nom du membre:")
-                     membre=Membre(ID,nom)
-                     Biblio.enregistrer_membres(membre)
-                     print("Membre bien ajouté!")
-                     break
+                ID=int(input("Entrer l id du membre :"))
+                nom=input("Entrer le nom du membre:")
+                membre=Membre(ID,nom)
+                Biblio.enregistrer_membres(membre)
+                print("Membre bien ajouté!")
             
            case "3":
                print("---Emprunt un livre:---")

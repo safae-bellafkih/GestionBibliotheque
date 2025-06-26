@@ -58,6 +58,10 @@ def main():
                isbn=int(input("Entrer l'isbn du livre que vous voulez emprunter:"))
                id=int(input("Entrer l'id du membre qui veux emprunter le livre:"))
                try:
+                  if isbn not in Biblio.livres:
+                       raise LivreInexistantError()
+                  if id not in Biblio.membres:
+                      raise MembreInexistantError()
                   livre=Biblio.livres[isbn]
                   membre=Biblio.membres[id]
                   Biblio.gestion_emprunts(livre,membre)
@@ -72,10 +76,14 @@ def main():
                isbn=int(input("Entrer l'isbn du livre que vous voulez retourner:"))
                id=int(input("Entrer l'id du membre qui veux retourner le livre:"))
                try:
-                  livre=Biblio.livres[isbn]
-                  membre=Biblio.membres[id]
-                  Biblio.gestion_retours(livre,membre)
-                  print("Livre retourné avec succes")
+                   if isbn not in Biblio.livres:
+                       raise LivreInexistantError()
+                   if id not in Biblio.membres:
+                       raise MembreInexistantError()
+                   livre=Biblio.livres[isbn]
+                   membre=Biblio.membres[id]
+                   Biblio.gestion_retours(livre,membre)
+                   print("Livre retourné avec succes")
                except(LivreInexistantError,MembreInexistantError) as e:
                    print (f"Erreur : {e}")
                

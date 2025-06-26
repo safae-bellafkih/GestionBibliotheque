@@ -5,6 +5,7 @@ from exception import(
     MembreInexistantError,
     QuotaEmpruntDepasseError
 )
+from visualisations import histogramme, diag_circulaire, courbe_temporelle
 
 
 def main():
@@ -84,6 +85,10 @@ def main():
 
            case "6":
                print("---Affichage de statistiques---")
+               diag_circulaire(Biblio)
+               histogramme(Biblio)
+               courbe_temporelle()
+               
 
                
            case "7":

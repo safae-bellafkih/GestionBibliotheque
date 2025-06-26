@@ -18,7 +18,7 @@ def diag_circulaire(biblio:Bibliotheque):
   compteur=Counter(genres)
   labels=compteur.keys()
   sizes=compteur.values()
-  plt.pie(sizes,labels=labels,autopct='%1.1f%%')
+  plt.pie(sizes,labels=labels,autopct='%1.1f%%',explode=[0.05]*len(sizes))
   plt.title("Répartition des genres dans la bibliothèque")
   plt.show()
 
@@ -37,6 +37,8 @@ def histogramme(biblio:Bibliotheque):
    plt.title("TOP 10 auteurs")
    plt.xticks(rotation=45)
    plt.ylabel("Nombre de livres")
+   for i, v in enumerate(valeurs):
+    plt.text(i, v + 0.1, str(v), ha='center')
    plt.show()
 
 
@@ -62,6 +64,9 @@ def courbe_temporelle():
   plt.xlabel("Date")
   plt.ylabel("Nombre d'emprunts")
   plt.xticks(rotation=45)
+  for i, v in enumerate(valeurs):
+    plt.text(i, v + 0.1, str(v), ha='center')
+
   plt.tight_layout()
   plt.show()
 

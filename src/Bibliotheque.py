@@ -104,17 +104,19 @@ class Bibliotheque:
     def chargement_donnees(self):
         with open(LIVRES_PATH,"r",encoding="utf-8") as f:
             for ligne in f:
-                isbn,titre,auteur,annee,genre,statut=ligne.strip().split(";")
+                isbn_str,titre,auteur,annee,genre,statut=ligne.strip().split(";")
+                isbn=int(isbn_str.strip())
                 livre=Livre(isbn,titre,auteur,annee,genre,statut)
                 self.livres[livre.ISBN]=livre
 
         with open(MEMBRES_PATH,"r",encoding="utf-8") as f:
             for ligne in f:
-                id,nom,liste_isbn_livre=ligne.strip().split(";")
-                membre=Membre(id.strip(),nom.strip())   
+                id_str,nom,liste_isbn_livre=ligne.strip().split(";")
+                id = int(id_str.strip())
+                membre=Membre(id,nom.strip())   
                 if liste_isbn_livre.strip():
-                 for isbn in liste_isbn_livre.split("/"):
-                    isbn=isbn.strip()
+                 for isbn_str in liste_isbn_livre.split("/"):
+                    isbn=int(isbn_str.strip())
                     if isbn in self.livres:
                         livre=self.livres[isbn]
                         membre.livres_empruntes.append(livre)

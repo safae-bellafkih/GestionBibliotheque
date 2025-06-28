@@ -1,1 +1,4 @@
-23;jsds;lmlsk;2002;Romance;disponible
+1001;The hobbit;J.R.R;1937;Fantasy;disponible
+1002;The lord of the rings;J.R.R;1954;Fantasy;disponible
+1003;Ikigai;Hector Garcia;2016;Self-help;disponible
+1004;The alchemist;Paulo Coelho;1988;Fiction;disponible

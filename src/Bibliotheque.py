@@ -34,6 +34,7 @@ class Membre:
         self.ID=ID
         self.nom=nom
         self.livres_empruntes=[]
+
    
     def __str__(self):
         empruntes = ", ".join([livre.titre for livre in self.livres_empruntes]) or "Aucun"
@@ -51,11 +52,28 @@ class Bibliotheque:
     
 
 
-    def supprimer_livre(self,livre:Livre):
-        self.livres.pop(livre.ISBN)
+    def supprimer_livre(self, livre: Livre):
+     if livre.ISBN not in self.livres:
+        raise LivreInexistantError()
+    
+     if livre.statut == "emprunté":
+        raise LivreIndisponibleError("Ce livre est actuellement emprunté et ne peut pas être supprimé.")
+    
+     del self.livres[livre.ISBN]
+
     
     def enregistrer_membres(self,membre:Membre):
         self.membres[membre.ID]=membre
+
+    def supprimer_membre(self, membre: Membre):
+     if membre.ID not in self.membres:
+        raise MembreInexistantError()
+    
+     if membre.livres_empruntes:
+        raise Exception("Le membre a encore des livres empruntés.")
+    
+     del self.membres[membre.ID]
+
     
 
     def gestion_emprunts(self,livre:Livre,membre:Membre):

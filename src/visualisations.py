@@ -37,44 +37,52 @@ def histogramme(biblio:Bibliotheque):
    valeurs=[nb for _,nb in top]
    plt.bar(noms,valeurs)
    plt.title("TOP 10 auteurs")
-   plt.xticks(rotation=45)
    plt.ylabel("Nombre de livres")
    for i, v in enumerate(valeurs):
     plt.text(i, v + 0.1, str(v), ha='center')
-   plt.show()
    os.makedirs("assets", exist_ok=True)
-   plt.savefig("assets/stats_auteurs.png")
+   plt.savefig("assets/stats_genres.png")
+   plt.show()
+
 
 
 def courbe_temporelle():
-  dates=[]
-  with open(HISTORIQUE_PATH,"r",encoding="utf-8") as f:
-            for ligne in f: 
-                date_str,ISBN,ID_membre,action=ligne.strip().split(";")
-                if action != "emprunt":
-                 continue
+    dates = []
+
+    with open(HISTORIQUE_PATH, "r", encoding="utf-8") as f:
+        for ligne in f:
+            parts = ligne.strip().split(";")
+            if len(parts) != 4:
+                continue  
+            
+            date_str, ISBN, ID_membre, action = parts
+
+            if action != "emprunt":
+                continue
+
+            try:
                 date = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
-                if date>= datetime.now() - timedelta(days=30):
+                if date >= datetime.now() - timedelta(days=30):
                     dates.append(date.date())
+            except ValueError:
+                continue  # Ignore les dates invalides
 
-
-  compteur = Counter(dates)
-  jours = sorted(compteur.keys())
-  valeurs = [compteur[jour] for jour in jours]
+    compteur = Counter(dates)
+    jours = sorted(compteur.keys())
+    valeurs = [compteur[jour] for jour in jours]
 
     # ➤ Tracer la courbe
-  plt.plot(jours, valeurs, marker="o")
-  plt.title("Activité des emprunts - 30 derniers jours")
-  plt.xlabel("Date")
-  plt.ylabel("Nombre d'emprunts")
-  plt.xticks(rotation=45)
-  for i, v in enumerate(valeurs):
-    plt.text(i, v + 0.1, str(v), ha='center')
+    plt.plot(jours, valeurs, marker="o")
+    plt.title("Activité des emprunts - 30 derniers jours")
+    plt.xlabel("Date")
+    plt.ylabel("Nombre d'emprunts")
+    plt.xticks(rotation=45)
+    for i, v in enumerate(valeurs):
+        plt.text(i, v + 0.1, str(v), ha='center')
 
-  plt.tight_layout()
-  plt.show()
+    plt.tight_layout()
+    plt.show()
 
-  
 
 
    

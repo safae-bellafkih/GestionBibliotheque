@@ -77,7 +77,9 @@ def courbe_temporelle():
     plt.xticks(rotation=45)
     for i, v in enumerate(valeurs):
         plt.text(i, v + 0.1, str(v), ha='center')
+    
 
+    plt.gcf().set_size_inches(10, 5)
     plt.tight_layout()
     plt.show()
 

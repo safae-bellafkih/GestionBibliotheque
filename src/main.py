@@ -17,7 +17,7 @@ def main():
        print("2.Inscrire un membre")
        print("3.Emprunter un livre")
        print("4.Rendre un livre")
-       print("5.Lister tous les livres")
+       print("5.Lister tous les livres et Les membres")
        print("6.Afficher les statistiques")
        print("7. Supprimer un livre")       
        print("8. Supprimer un membre") 

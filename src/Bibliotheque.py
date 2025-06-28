@@ -81,11 +81,11 @@ class Bibliotheque:
         if membre.ID not in self.membres:
             raise  MembreInexistantError()
         
-        if (len(membre.livres_empruntes)>=3):
-            raise QuotaEmpruntDepasseError()
-        
         if livre.ISBN not in self.livres:
             raise LivreInexistantError()
+        
+        if (len(membre.livres_empruntes)>=3):
+            raise QuotaEmpruntDepasseError()
                 
         if livre.statut=="emprunté":
             raise LivreIndisponibleError()

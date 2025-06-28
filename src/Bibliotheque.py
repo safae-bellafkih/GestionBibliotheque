@@ -1,5 +1,6 @@
 import os
 
+# Définition des chemins vers les fichiers de données
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))  # Dossier racine du projet
 DATA_DIR = os.path.join(BASE_DIR, "data")
 
@@ -75,7 +76,7 @@ class Bibliotheque:
      del self.membres[membre.ID]
 
     
-
+    #Emprunter livre avec verifications
     def gestion_emprunts(self,livre:Livre,membre:Membre):
 
         if membre.ID not in self.membres:
@@ -94,6 +95,8 @@ class Bibliotheque:
         membre.livres_empruntes.append(livre)
         self.enregistrer_historique(livre,membre,"emprunt")
 
+
+    #Retourner livre apres verifications
     def gestion_retours(self,livre:Livre,membre:Membre):
         if livre.ISBN not in self.livres:
             raise LivreInexistantError()
@@ -106,7 +109,7 @@ class Bibliotheque:
             membre.livres_empruntes.remove(livre)
             self.enregistrer_historique(livre,membre,"retour")
            
-
+    #Souvegarde les donnees dans les fichiers .txt
     def souvegarde_donnees(self):
         with open(LIVRES_PATH,"w",encoding="utf-8") as f:
            for livre in self.livres.values():
@@ -119,6 +122,7 @@ class Bibliotheque:
                 ligne=f"{membre.ID}; {membre.nom}; {emprunte}\n"
                 f.write(ligne)
 
+    #Recupere les donnees depuis les fichiers .txt
     def chargement_donnees(self):
         with open(LIVRES_PATH,"r",encoding="utf-8") as f:
             for ligne in f:
@@ -146,7 +150,7 @@ class Bibliotheque:
               
 
 
-
+    #Affiche contenu du biblio
     def afficher_donnees(self):
         print("----Livres----:")
         if not self.livres:
@@ -166,7 +170,7 @@ class Bibliotheque:
                 print (f" Membre: {membre.ID}; {membre.nom}; {emprunte};")
 
 
-            
+   #Enregistre une ligne dans le fichier historique pour chaque emprunt ou retour
     def enregistrer_historique(self,livre,membre,action):
         date_heure = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         with open(HISTORIQUE_PATH, "a", newline="", encoding="utf-8") as f:

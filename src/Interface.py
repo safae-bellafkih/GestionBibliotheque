@@ -70,7 +70,7 @@ class InterfaceBibliotheque(tk.Tk):
 
         self.mettre_a_jour_tableau_livres()
 
-        # Bouton supprimer ou modifier livre
+        # Bouton pour supprimer ou modifier livre
         btn_supprimer_livre = tk.Button(self.tab_livres, text="Supprimer le livre sélectionné", command=self.supprimer_livre)
         btn_supprimer_livre.pack(pady=5)
         btn_modifier_livre = tk.Button(self.tab_livres, text="Modifier le livre sélectionné", command=self.modifier_livre)

@@ -19,9 +19,9 @@ def main():
        print("4.Rendre un livre")
        print("5.Lister tous les livres")
        print("6.Afficher les statistiques")
-       print("7.Souvegarder et quitter")
-       print("8. Supprimer un livre")       
-       print("9. Supprimer un membre") 
+       print("7. Supprimer un livre")       
+       print("8. Supprimer un membre") 
+       print("9.Souvegarder et quitter")
 
        choix=input("Choissisez une option :")
 
@@ -100,14 +100,7 @@ def main():
                courbe_temporelle()
                
 
-               
            case "7":
-               print("---Souvegarde des données---")
-               Biblio.souvegarde_donnees()
-               print("---Données souvegardées avec succes")
-               break
-           
-           case "8":
                print("---Suppression d’un livre---")
                try:
                    isbn = int(input("Entrer l'ISBN du livre à supprimer : "))
@@ -119,7 +112,7 @@ def main():
                except (LivreInexistantError, LivreIndisponibleError) as e:
                 print(f"Erreur : {e}")
                
-           case "9":
+           case "8":
                print("---Suppression d’un membre---")
                try:
                    id_membre = int(input("Entrer l'ID du membre à supprimer : "))
@@ -130,6 +123,12 @@ def main():
                    print("Membre supprimé avec succès.")
                except (MembreInexistantError, Exception) as e:
                    print(f"Erreur : {e}")
+
+           case "9":
+               print("---Souvegarde des données---")
+               Biblio.souvegarde_donnees()
+               print("---Données souvegardées avec succes")
+               break
 
 
            

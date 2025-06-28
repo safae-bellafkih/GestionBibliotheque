@@ -20,6 +20,8 @@ def main():
        print("5.Lister tous les livres")
        print("6.Afficher les statistiques")
        print("7.Souvegarder et quitter")
+       print("8. Supprimer un livre")       
+       print("9. Supprimer un membre") 
 
        choix=input("Choissisez une option :")
 
@@ -104,6 +106,32 @@ def main():
                Biblio.souvegarde_donnees()
                print("---Données souvegardées avec succes")
                break
+           
+           case "8":
+               print("---Suppression d’un livre---")
+               try:
+                   isbn = int(input("Entrer l'ISBN du livre à supprimer : "))
+                   if isbn not in Biblio.livres:
+                     raise LivreInexistantError()
+                   livre = Biblio.livres[isbn]
+                   Biblio.supprimer_livre(livre)
+                   print("Livre supprimé avec succès.")
+               except (LivreInexistantError, LivreIndisponibleError) as e:
+                print(f"Erreur : {e}")
+               
+           case "9":
+               print("---Suppression d’un membre---")
+               try:
+                   id_membre = int(input("Entrer l'ID du membre à supprimer : "))
+                   if id_membre not in Biblio.membres:
+                      raise MembreInexistantError()
+                   membre = Biblio.membres[id_membre]
+                   Biblio.supprimer_membre(membre)
+                   print("Membre supprimé avec succès.")
+               except (MembreInexistantError, Exception) as e:
+                   print(f"Erreur : {e}")
+
+
            
         
            

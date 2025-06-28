@@ -28,7 +28,6 @@ class InterfaceBibliotheque(tk.Tk):
         self.tabs.add(self.tab_emprunts, text="Emprunts")
         self.tabs.add(self.tab_stats, text="Statistiques")
 
-        # Appels aux méthodes pour peupler les onglets
         self.init_livres_tab()
         self.init_membres_tab()
         self.init_emprunts_tab()
@@ -63,7 +62,7 @@ class InterfaceBibliotheque(tk.Tk):
         btn_ajouter = tk.Button(frame, text="Ajouter", command=self.ajouter_livre)
         btn_ajouter.grid(row=5, columnspan=2, pady=10)
 
-         # Tableau des livres
+        # Tableau des livres
         self.tree_livres = ttk.Treeview(self.tab_livres, columns=("ISBN", "Titre", "Auteur", "Année", "Genre", "Statut"), show="headings")
         for col in self.tree_livres["columns"]:
             self.tree_livres.heading(col, text=col)
@@ -71,7 +70,7 @@ class InterfaceBibliotheque(tk.Tk):
 
         self.mettre_a_jour_tableau_livres()
 
-                # Bouton supprimer livre
+        # Bouton supprimer ou modifier livre
         btn_supprimer_livre = tk.Button(self.tab_livres, text="Supprimer le livre sélectionné", command=self.supprimer_livre)
         btn_supprimer_livre.pack(pady=5)
         btn_modifier_livre = tk.Button(self.tab_livres, text="Modifier le livre sélectionné", command=self.modifier_livre)
@@ -91,8 +90,15 @@ class InterfaceBibliotheque(tk.Tk):
 
             livre = Livre(isbn, titre, auteur, annee, genre, "disponible")
             self.biblio.ajouter_livre(livre)
+            self.biblio.souvegarde_donnees()
             messagebox.showinfo("Succès", "Livre ajouté avec succès.")
             self.mettre_a_jour_tableau_livres()
+
+            self.entry_isbn.delete(0, tk.END)
+            self.entry_titre.delete(0, tk.END)
+            self.entry_auteur.delete(0, tk.END)
+            self.entry_annee.delete(0, tk.END)
+            self.entry_genre.delete(0, tk.END)
         except ValueError as e:
             messagebox.showerror("Erreur", str(e))
 
@@ -101,15 +107,15 @@ class InterfaceBibliotheque(tk.Tk):
         if not selected:
             messagebox.showwarning("Attention", "Veuillez sélectionner un livre à supprimer.")
             return
-        # Récupérer l'ISBN du livre sélectionné
+        # Récupérer l'ISBN du livre selectionee
         isbn = int(self.tree_livres.item(selected[0])['values'][0])
         livre = self.biblio.livres.get(isbn)
         if not livre:
             messagebox.showerror("Erreur", "Livre introuvable.")
             return
         try:
-            self.biblio.supprimer_livre(livre)
-            self.biblio.souvegarde_donnees()  # sauvegarder les changements dans les fichiers
+            self.biblio.supprimer_livre(livre) #suppression
+            self.biblio.souvegarde_donnees()  # sauvegarder 
             messagebox.showinfo("Succès", "Livre supprimé avec succès.")
             self.mettre_a_jour_tableau_livres()
         except Exception as e:
@@ -126,14 +132,14 @@ class InterfaceBibliotheque(tk.Tk):
         if not livre:
             raise ValueError("Livre introuvable.")
 
-        # Récupération des nouvelles valeurs depuis les champs
+        # Recuperation des nvls valeurs depuis les champs
         nouveau_isbn = int(self.entry_isbn.get())
         titre = self.entry_titre.get()
         auteur = self.entry_auteur.get()
         annee = int(self.entry_annee.get())
         genre = self.entry_genre.get()
 
-        # Si l'ISBN a changé, mettre à jour la clé dans le dictionnaire
+        # Si l'ISBN a changé mettre a jour la clé dans le dict
         if nouveau_isbn != ancien_isbn:
             if nouveau_isbn in self.biblio.livres:
                 raise ValueError("Un autre livre avec ce nouvel ISBN existe déjà.")
@@ -141,7 +147,7 @@ class InterfaceBibliotheque(tk.Tk):
             livre = Livre(nouveau_isbn, titre, auteur, annee, genre, livre.statut)
             self.biblio.livres[nouveau_isbn] = livre
         else:
-            # Mise à jour des attributs du livre existant
+            # Mise a jour des attributs du livre existant
             livre.titre = titre
             livre.auteur = auteur
             livre.année = annee
@@ -154,8 +160,6 @@ class InterfaceBibliotheque(tk.Tk):
         messagebox.showerror("Erreur", str(e))
 
 
-
-
     def mettre_a_jour_tableau_livres(self):
         # Vider le tableau
         for row in self.tree_livres.get_children():
@@ -163,6 +167,7 @@ class InterfaceBibliotheque(tk.Tk):
         # Ajouter les livres
         for livre in self.biblio.livres.values():
             self.tree_livres.insert("", "end", values=(livre.ISBN, livre.titre, livre.auteur, livre.année, livre.genre, livre.statut))
+
 
     # -------------------- MEMBRES -----------------------
     def init_membres_tab(self):
@@ -191,16 +196,13 @@ class InterfaceBibliotheque(tk.Tk):
 
         self.mettre_a_jour_tableau_membres()
 
-                # Bouton supprimer membre
+        # Bouton supprimer et modifier membre
         btn_supprimer_membre = tk.Button(self.tab_membres, text="Supprimer le membre sélectionné", command=self.supprimer_membre)
         btn_supprimer_membre.pack(pady=5)
         btn_modifier_membre = tk.Button(self.tab_membres, text="Modifier le membre sélectionné", command=self.modifier_membre)
         btn_modifier_membre.pack(pady=5)
 
         
-
-
-
     def mettre_a_jour_tableau_membres(self):
         for row in self.tree_membres.get_children():
             self.tree_membres.delete(row)
@@ -217,8 +219,13 @@ class InterfaceBibliotheque(tk.Tk):
             nom = self.entry_nom.get()
             membre = Membre(id, nom)
             self.biblio.enregistrer_membres(membre)
+            self.biblio.souvegarde_donnees()
             messagebox.showinfo("Succès", "Membre inscrit avec succès.")
             self.mettre_a_jour_tableau_membres()
+
+            self.entry_id.delete(0, tk.END)
+            self.entry_nom.delete(0, tk.END)
+
         except ValueError as e:
             messagebox.showerror("Erreur", str(e))
 
@@ -227,15 +234,15 @@ class InterfaceBibliotheque(tk.Tk):
         if not selected:
             messagebox.showwarning("Attention", "Veuillez sélectionner un membre à supprimer.")
             return
-        # Récupérer l'ID du membre sélectionné
+        # Récupérer ID du membre sélectionne
         id_membre = int(self.tree_membres.item(selected[0])['values'][0])
         membre = self.biblio.membres.get(id_membre)
         if not membre:
             messagebox.showerror("Erreur", "Membre introuvable.")
             return
         try:
-            self.biblio.supprimer_membre(membre)
-            self.biblio.souvegarde_donnees()  # sauvegarder les changements dans les fichiers
+            self.biblio.supprimer_membre(membre) #suppression
+            self.biblio.souvegarde_donnees()  # sauvegarde
             messagebox.showinfo("Succès", "Membre supprimé avec succès.")
             self.mettre_a_jour_tableau_membres()
         except Exception as e:
@@ -253,7 +260,7 @@ class InterfaceBibliotheque(tk.Tk):
         if not membre:
             raise ValueError("Membre introuvable.")
 
-        # Récupération des nouvelles valeurs
+        # Récupération des nvls valeurs
         nouveau_id = int(self.entry_id.get())
         nouveau_nom = self.entry_nom.get()
 

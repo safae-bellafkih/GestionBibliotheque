@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 import csv
 import os
 
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))  # Dossier racine du projet
+BASE_DIR = os.path.dirname(os.path.dirname(__file__)) 
 DATA_DIR = os.path.join(BASE_DIR, "data")
 HISTORIQUE_PATH = os.path.join(DATA_DIR, "historique.csv")
 
@@ -41,7 +41,7 @@ def histogramme(biblio:Bibliotheque):
    for i, v in enumerate(valeurs):
     plt.text(i, v + 0.1, str(v), ha='center')
    os.makedirs("assets", exist_ok=True)
-   plt.savefig("assets/stats_genres.png")
+   plt.savefig("assets/histogramme.png")
    plt.show()
 
 
@@ -56,7 +56,6 @@ def courbe_temporelle():
                 continue  
             
             date_str, ISBN, ID_membre, action = parts
-
             if action != "emprunt":
                 continue
 
@@ -65,13 +64,12 @@ def courbe_temporelle():
                 if date >= datetime.now() - timedelta(days=30):
                     dates.append(date.date())
             except ValueError:
-                continue  # Ignore les dates invalides
+                continue  # pour ignorer les dates invalides
 
     compteur = Counter(dates)
     jours = sorted(compteur.keys())
     valeurs = [compteur[jour] for jour in jours]
-
-    # ➤ Tracer la courbe
+    
     plt.plot(jours, valeurs, marker="o")
     plt.title("Activité des emprunts - 30 derniers jours")
     plt.xlabel("Date")

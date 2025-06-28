@@ -1,4 +1,3 @@
-1001;The hobbit;J.R.R;1937;Fantasy;disponible
-1002;The lord of the rings;J.R.R;1954;Fantasy;disponible
-1003;Ikigai;Hector Garcia;2016;Self-help;disponible
-1004;The alchemist;Paulo Coelho;1988;Fiction;disponible
+1006;Dune;Frank Herbeet;1965;Fiction;disponible
+1007;Harry potter;J.K rowling;1999;Fantasy;disponible
+1003;Atomic Habits;uknowwwn;2018;Self-help;disponible

@@ -20,6 +20,8 @@ def diag_circulaire(biblio:Bibliotheque):
   sizes=compteur.values()
   plt.pie(sizes,labels=labels,autopct='%1.1f%%',explode=[0.05]*len(sizes))
   plt.title("Répartition des genres dans la bibliothèque")
+  os.makedirs("assets", exist_ok=True)
+  plt.savefig("assets/stats_genres.png")
   plt.show()
 
 
@@ -40,6 +42,8 @@ def histogramme(biblio:Bibliotheque):
    for i, v in enumerate(valeurs):
     plt.text(i, v + 0.1, str(v), ha='center')
    plt.show()
+   os.makedirs("assets", exist_ok=True)
+   plt.savefig("assets/stats_auteurs.png")
 
 
 def courbe_temporelle():
@@ -69,6 +73,8 @@ def courbe_temporelle():
 
   plt.tight_layout()
   plt.show()
+
+  
 
 
    
